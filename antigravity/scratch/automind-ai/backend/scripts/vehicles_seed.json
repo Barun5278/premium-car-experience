@@ -1,0 +1,1172 @@
+{
+  "_about": "One-time JSON conversion of frontend/data/vehicles.ts (23 vehicles). Hand-transcribed. Source of truth for Phase 1 catalog seed. Do not regenerate from this file; regenerate only by re-reading the TS file.",
+  "brands": [
+    { "slug": "porsche",          "name": "Porsche" },
+    { "slug": "lucid",            "name": "Lucid" },
+    { "slug": "bmw",              "name": "BMW" },
+    { "slug": "ferrari",          "name": "Ferrari" },
+    { "slug": "rolls-royce",      "name": "Rolls-Royce" },
+    { "slug": "lamborghini",      "name": "Lamborghini" },
+    { "slug": "volkswagen",       "name": "Volkswagen" },
+    { "slug": "honda",            "name": "Honda" },
+    { "slug": "hyundai",          "name": "Hyundai" },
+    { "slug": "mercedes-benz",    "name": "Mercedes-Benz" },
+    { "slug": "audi",             "name": "Audi" },
+    { "slug": "tesla",            "name": "Tesla" },
+    { "slug": "land-rover",       "name": "Land Rover" },
+    { "slug": "rivian",           "name": "Rivian" },
+    { "slug": "bentley",          "name": "Bentley" },
+    { "slug": "mercedes-maybach", "name": "Mercedes-Maybach" },
+    { "slug": "mclaren",          "name": "McLaren" },
+    { "slug": "chevrolet",        "name": "Chevrolet" },
+    { "slug": "aston-martin",     "name": "Aston Martin" },
+    { "slug": "rimac",            "name": "Rimac" }
+  ],
+  "categories": [
+    { "slug": "sedan",         "name": "Sedan" },
+    { "slug": "suv",           "name": "SUV" },
+    { "slug": "hatchback",     "name": "Hatchback" },
+    { "slug": "coupe",         "name": "Coupe" },
+    { "slug": "hypercar",      "name": "Hypercar" },
+    { "slug": "sports",        "name": "Sports" },
+    { "slug": "convertible",   "name": "Convertible" },
+    { "slug": "crossover",     "name": "Crossover" },
+    { "slug": "electric",      "name": "Electric" },
+    { "slug": "hybrid",        "name": "Hybrid" },
+    { "slug": "plug-in-hybrid","name": "Plug-in Hybrid" },
+    { "slug": "petrol",        "name": "Petrol" },
+    { "slug": "diesel",        "name": "Diesel" },
+    { "slug": "luxury",        "name": "Luxury" },
+    { "slug": "performance",   "name": "Performance" },
+    { "slug": "track-focused", "name": "Track Focused" },
+    { "slug": "awd",           "name": "All-Wheel Drive" }
+  ],
+  "vehicles": [
+    {
+      "id": "porsche-911-gt3-rs-2024",
+      "brand_slug": "porsche",
+      "model": "911 GT3 RS",
+      "variant": "Weissach Package",
+      "year": 2024,
+      "body_type": "Sports",
+      "fuel_type": "Petrol",
+      "transmission": "Dual-Clutch",
+      "drivetrain": "RWD",
+      "price_usd": 241300,
+      "currency": "USD",
+      "mileage": 18,
+      "seating": 2,
+      "safety_rating": 5.0,
+      "boot_space_liters": 132,
+      "engine": "4.0L Naturally Aspirated Boxer-6",
+      "description": "The ultimate track weapon from Stuttgart featuring Formula 1-inspired active aerodynamics and motorsport-derived chassis dynamics.",
+      "is_featured": true,
+      "tags": ["Track Focused", "Naturally Aspirated", "Supercar"],
+      "specs": {
+        "horsepower": 518,
+        "torque_lb_ft": 342
+      },
+      "performance": {
+        "zero_to_sixty_sec": 3.0,
+        "top_speed_mph": 184,
+        "lateral_g": 1.25,
+        "braking_distance_ft": 92
+      },
+      "dimensions": {
+        "length_mm": 4572,
+        "width_mm": 1900,
+        "height_mm": 1322,
+        "wheelbase_mm": 2457
+      },
+      "features": [
+        "Active Aerodynamics with DRS",
+        "Carbon Fiber Front Lid & Roof",
+        "Adjustable Suspension Dampers on Steering Wheel",
+        "Center-Lock Forged Magnesium Wheels",
+        "Porsche Ceramic Composite Brakes (PCCB)",
+        "Titanium Roll Cage"
+      ],
+      "image": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["sports", "petrol", "track-focused", "performance"]
+    },
+    {
+      "id": "porsche-taycan-turbo-s-2025",
+      "brand_slug": "porsche",
+      "model": "Taycan",
+      "variant": "Turbo S",
+      "year": 2025,
+      "body_type": "Sedan",
+      "fuel_type": "Electric",
+      "transmission": "Direct-Drive",
+      "drivetrain": "AWD",
+      "price_usd": 209000,
+      "currency": "USD",
+      "mileage": 360,
+      "seating": 4,
+      "safety_rating": 5.0,
+      "boot_space_liters": 407,
+      "engine": "Dual Permanent Magnet Synchronous Motors",
+      "description": "Next-generation electric hyper-sedan delivering 938 horsepower and groundbreaking 800V charging performance.",
+      "is_featured": true,
+      "tags": ["EV", "Fast Charging", "High Horsepower"],
+      "specs": {
+        "horsepower": 938,
+        "torque_lb_ft": 818,
+        "voltage_architecture": 800,
+        "dc_fast_charge_kw": 320
+      },
+      "performance": {
+        "zero_to_sixty_sec": 2.3,
+        "top_speed_mph": 162,
+        "lateral_g": 1.08
+      },
+      "dimensions": {
+        "length_mm": 4963,
+        "width_mm": 1966,
+        "height_mm": 1378,
+        "wheelbase_mm": 2900
+      },
+      "features": [
+        "800V Ultra-Fast Architecture (320kW DC)",
+        "Porsche Active Ride Suspension",
+        "Rear-Axle Steering",
+        "Burmester 3D High-End Surround Sound",
+        "Thermal Preconditioning Battery Matrix",
+        "Curved 16.8-inch Digital Instrument Cluster"
+      ],
+      "image": "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["sedan", "electric", "luxury", "performance", "awd"]
+    },
+    {
+      "id": "lucid-air-sapphire-2024",
+      "brand_slug": "lucid",
+      "model": "Air",
+      "variant": "Sapphire",
+      "year": 2024,
+      "body_type": "Sedan",
+      "fuel_type": "Electric",
+      "transmission": "Direct-Drive",
+      "drivetrain": "AWD",
+      "price_usd": 249000,
+      "currency": "USD",
+      "mileage": 427,
+      "seating": 5,
+      "safety_rating": 5.0,
+      "boot_space_liters": 627,
+      "engine": "Tri-Motor Powertrain (Twin Rear + Single Front)",
+      "description": "The world's first luxury electric super-sports sedan, producing over 1,200 hp with blistering sub-2-second acceleration.",
+      "is_featured": true,
+      "tags": ["Tri-Motor", "Hyper Sedan", "Long Range EV"],
+      "specs": {
+        "horsepower": 1234,
+        "torque_lb_ft": 1430
+      },
+      "performance": {
+        "zero_to_sixty_sec": 1.89,
+        "top_speed_mph": 205,
+        "lateral_g": 1.15
+      },
+      "dimensions": {
+        "length_mm": 4975,
+        "width_mm": 1939,
+        "height_mm": 1410,
+        "wheelbase_mm": 2960
+      },
+      "features": [
+        "Torque-Vectoring Tri-Motor Drive",
+        "Carbon Ceramic Track Brakes",
+        "Glass Canopy Panoramic Roof",
+        "34-inch 5K Curved Glass Cockpit",
+        "DreamDrive Pro Autonomous Sensor Suite",
+        "Ultra-Luxurious Alcantara Sapphire Interior"
+      ],
+      "image": "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["sedan", "electric", "luxury", "performance", "awd"]
+    },
+    {
+      "id": "bmw-m3-competition-2024",
+      "brand_slug": "bmw",
+      "model": "M3",
+      "variant": "Competition xDrive",
+      "year": 2024,
+      "body_type": "Sedan",
+      "fuel_type": "Petrol",
+      "transmission": "Automatic",
+      "drivetrain": "AWD",
+      "price_usd": 84300,
+      "currency": "USD",
+      "mileage": 19,
+      "seating": 5,
+      "safety_rating": 5.0,
+      "boot_space_liters": 480,
+      "engine": "3.0L TwinPower Turbo Inline-6 (S58)",
+      "description": "The benchmark high-performance sports sedan with relentless twin-turbo power and switchable all-wheel-drive precision.",
+      "is_featured": false,
+      "tags": ["Iconic", "Twin Turbo", "Sports Sedan"],
+      "specs": {
+        "horsepower": 503,
+        "torque_lb_ft": 479
+      },
+      "performance": {
+        "zero_to_sixty_sec": 3.4,
+        "top_speed_mph": 180,
+        "lateral_g": 1.05
+      },
+      "dimensions": {
+        "length_mm": 4794,
+        "width_mm": 1903,
+        "height_mm": 1433,
+        "wheelbase_mm": 2857
+      },
+      "features": [
+        "M xDrive with 2WD Drift Mode",
+        "M Carbon Bucket Seats",
+        "Adaptive M Suspension",
+        "BMW Curved Display with iDrive 8.5",
+        "M Drive Professional with Drift Analyser",
+        "Harman Kardon Surround Audio"
+      ],
+      "image": "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["sedan", "petrol", "performance", "awd"]
+    },
+    {
+      "id": "ferrari-296-gtb-2024",
+      "brand_slug": "ferrari",
+      "model": "296 GTB",
+      "variant": "Assetto Fiorano",
+      "year": 2024,
+      "body_type": "Sports",
+      "fuel_type": "Plug-in Hybrid",
+      "transmission": "Dual-Clutch",
+      "drivetrain": "RWD",
+      "price_usd": 342986,
+      "currency": "USD",
+      "mileage": 22,
+      "seating": 2,
+      "safety_rating": 5.0,
+      "boot_space_liters": 202,
+      "engine": "2.9L Twin-Turbo 120\u00b0 V6 + Electric Motor",
+      "description": "Ferrari's modern mid-rear-engined berlinetta revolutionizing performance with an ultra-responsive V6 turbo hybrid powertrain.",
+      "is_featured": true,
+      "tags": ["Hybrid Supercar", "Maranello", "Exotic"],
+      "specs": {
+        "horsepower": 819,
+        "torque_lb_ft": 546
+      },
+      "performance": {
+        "zero_to_sixty_sec": 2.7,
+        "top_speed_mph": 205,
+        "lateral_g": 1.2
+      },
+      "dimensions": {
+        "length_mm": 4565,
+        "width_mm": 1958,
+        "height_mm": 1187,
+        "wheelbase_mm": 2600
+      },
+      "features": [
+        "Assetto Fiorano Multimatic Shock Absorbers",
+        "Carbon Fiber Front Bumper Extensions",
+        "Active Rear Spoiler (360kg Downforce)",
+        "Side Slip Control 7.0 (eSSC)",
+        "Brake-by-Wire ABS EVO System",
+        "All-Digital Steering Wheel HMI Interface"
+      ],
+      "image": "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["sports", "plug-in-hybrid", "performance", "track-focused"]
+    },
+    {
+      "id": "rolls-royce-spectre-2024",
+      "brand_slug": "rolls-royce",
+      "model": "Spectre",
+      "variant": "Bespoke Commission",
+      "year": 2024,
+      "body_type": "Coupe",
+      "fuel_type": "Electric",
+      "transmission": "Direct-Drive",
+      "drivetrain": "AWD",
+      "price_usd": 422750,
+      "currency": "USD",
+      "mileage": 291,
+      "seating": 4,
+      "safety_rating": 5.0,
+      "boot_space_liters": 460,
+      "engine": "Dual Separately Excited Synchronous Motors",
+      "description": "The ultra-luxury electric super coupe heralding a new era of effortless, silent automotive opulence.",
+      "is_featured": true,
+      "tags": ["Ultra Luxury", "Bespoke", "Electric Grand Tourer"],
+      "specs": {
+        "horsepower": 577,
+        "torque_lb_ft": 664
+      },
+      "performance": {
+        "zero_to_sixty_sec": 4.4,
+        "top_speed_mph": 155
+      },
+      "dimensions": {
+        "length_mm": 5453,
+        "width_mm": 2080,
+        "height_mm": 1559,
+        "wheelbase_mm": 3210
+      },
+      "features": [
+        "Planar Suspension Magic Carpet Ride System",
+        "Starlight Doors with 4,796 Illuminated Stars",
+        "Illuminated Pantheon Grille",
+        "Whisper-Quiet Acoustic Damping (180kg Sound Deadening)",
+        "Bespoke SPIRIT Digital Architecture",
+        "Coach Doors with Power Assist"
+      ],
+      "image": "https://images.unsplash.com/photo-1631295868223-63265b40d9e4?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1631295868223-63265b40d9e4?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["coupe", "electric", "luxury", "awd"]
+    },
+    {
+      "id": "lamborghini-urus-performante-2024",
+      "brand_slug": "lamborghini",
+      "model": "Urus",
+      "variant": "Performante",
+      "year": 2024,
+      "body_type": "SUV",
+      "fuel_type": "Petrol",
+      "transmission": "Automatic",
+      "drivetrain": "AWD",
+      "price_usd": 269885,
+      "currency": "USD",
+      "mileage": 16,
+      "seating": 5,
+      "safety_rating": 5.0,
+      "boot_space_liters": 616,
+      "engine": "4.0L Twin-Turbo V8",
+      "description": "Raising the bar of Super SUV performance with reduced weight, aerodynamic upgrades, and rally-inspired driving dynamics.",
+      "is_featured": false,
+      "tags": ["Super SUV", "Twin Turbo V8", "Rally Mode"],
+      "specs": {
+        "horsepower": 657,
+        "torque_lb_ft": 627
+      },
+      "performance": {
+        "zero_to_sixty_sec": 3.1,
+        "top_speed_mph": 190,
+        "lateral_g": 1.03
+      },
+      "dimensions": {
+        "length_mm": 5137,
+        "width_mm": 2026,
+        "height_mm": 1618,
+        "wheelbase_mm": 3006
+      },
+      "features": [
+        "Akrapovi\u010d Titanium Exhaust System",
+        "Carbon Fiber Hood with Functional Vents",
+        "Rally Mode for Loose Surface Drifting",
+        "Steel Spring Lowered Track Suspension",
+        "Rear-Wheel Steering with Active Torque Vectoring",
+        "Pirelli P Zero Trofeo R Super-Stick Tyres"
+      ],
+      "image": "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["suv", "petrol", "performance", "awd"]
+    },
+    {
+      "id": "vw-golf-r-2024",
+      "brand_slug": "volkswagen",
+      "model": "Golf R",
+      "variant": "20th Anniversary Edition",
+      "year": 2024,
+      "body_type": "Hatchback",
+      "fuel_type": "Petrol",
+      "transmission": "Dual-Clutch",
+      "drivetrain": "AWD",
+      "price_usd": 46890,
+      "currency": "USD",
+      "mileage": 26,
+      "seating": 5,
+      "safety_rating": 5.0,
+      "boot_space_liters": 381,
+      "engine": "2.0L EA888 evo4 Turbocharged Inline-4",
+      "description": "The gold standard of all-weather hot hatches, combining everyday practicality with track-ready AWD torque vectoring.",
+      "is_featured": false,
+      "tags": ["Hot Hatch", "AWD", "Everyday Practicality"],
+      "specs": {
+        "horsepower": 315,
+        "torque_lb_ft": 310
+      },
+      "performance": {
+        "zero_to_sixty_sec": 4.1,
+        "top_speed_mph": 168
+      },
+      "dimensions": {
+        "length_mm": 4290,
+        "width_mm": 1789,
+        "height_mm": 1458,
+        "wheelbase_mm": 2631
+      },
+      "features": [
+        "4MOTION with Rear Torque Vectoring (Drift Mode)",
+        "DCC Adaptive Chassis Control",
+        "Akrapovi\u010d R-Performance Titanium Exhaust",
+        "N\u00fcrburgring Driving Profile Mode",
+        "Digital Cockpit Pro with R-Specific Graphics",
+        "IQ.LIGHT LED Matrix Headlights"
+      ],
+      "image": "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["hatchback", "petrol", "performance", "awd"]
+    },
+    {
+      "id": "honda-civic-type-r-2024",
+      "brand_slug": "honda",
+      "model": "Civic",
+      "variant": "Type R (FL5)",
+      "year": 2024,
+      "body_type": "Hatchback",
+      "fuel_type": "Petrol",
+      "transmission": "Manual",
+      "drivetrain": "FWD",
+      "price_usd": 44795,
+      "currency": "USD",
+      "mileage": 24,
+      "seating": 4,
+      "safety_rating": 5.0,
+      "boot_space_liters": 410,
+      "engine": "2.0L VTEC Turbocharged K20C1 Inline-4",
+      "description": "The purest manual front-wheel-drive hot hatchback on earth, precision-engineered for unadulterated driver engagement.",
+      "is_featured": false,
+      "tags": ["Manual Transmission", "VTEC Turbo", "Driver Focused"],
+      "specs": {
+        "horsepower": 315,
+        "torque_lb_ft": 310
+      },
+      "performance": {
+        "zero_to_sixty_sec": 4.9,
+        "top_speed_mph": 171,
+        "lateral_g": 1.02
+      },
+      "dimensions": {
+        "length_mm": 4595,
+        "width_mm": 1890,
+        "height_mm": 1405,
+        "wheelbase_mm": 2735
+      },
+      "features": [
+        "6-Speed Close-Ratio Manual with Auto Rev-Match",
+        "Dual-Axis Strut Front Suspension",
+        "LogR Telemetry Performance Datalogger",
+        "Aluminum Die-Cast Rear Wing",
+        "Brembo 4-Piston Monobloc Front Calipers",
+        "Iconic Red Suede-Style Sports Seats"
+      ],
+      "image": "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["hatchback", "petrol", "performance"]
+    },
+    {
+      "id": "hyundai-ioniq-5-n-2025",
+      "brand_slug": "hyundai",
+      "model": "Ioniq 5",
+      "variant": "N Performance",
+      "year": 2025,
+      "body_type": "Hatchback",
+      "fuel_type": "Electric",
+      "transmission": "Direct-Drive",
+      "drivetrain": "AWD",
+      "price_usd": 66100,
+      "currency": "USD",
+      "mileage": 221,
+      "seating": 5,
+      "safety_rating": 5.0,
+      "boot_space_liters": 527,
+      "engine": "Dual Electric Motors with N Grin Boost",
+      "description": "An electric performance revolution offering synthetic dual-clutch gear shifts, rev-matching pops, and 641 hp cornering agility.",
+      "is_featured": true,
+      "tags": ["EV Enthusiast", "Simulated Gearshift", "High HP"],
+      "specs": {
+        "horsepower": 641,
+        "torque_lb_ft": 568,
+        "voltage_architecture": 800
+      },
+      "performance": {
+        "zero_to_sixty_sec": 3.25,
+        "top_speed_mph": 162
+      },
+      "dimensions": {
+        "length_mm": 4715,
+        "width_mm": 1940,
+        "height_mm": 1585,
+        "wheelbase_mm": 3000
+      },
+      "features": [
+        "N e-Shift Simulated 8-Speed Dual-Clutch Gearbox",
+        "N Active Sound+ (Ignition / Evolution / Supersonic)",
+        "N Drift Optimizer & Torque Distribution",
+        "800V Ultra-Fast Charging (10-80% in 18 mins)",
+        "Reinforced Chassis with 42 Additional Weld Points",
+        "Electronically Controlled Suspension"
+      ],
+      "image": "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["hatchback", "crossover", "electric", "performance", "awd"]
+    },
+    {
+      "id": "mercedes-benz-s580-2024",
+      "brand_slug": "mercedes-benz",
+      "model": "S-Class",
+      "variant": "S 580 4MATIC",
+      "year": 2024,
+      "body_type": "Sedan",
+      "fuel_type": "Hybrid",
+      "transmission": "Automatic",
+      "drivetrain": "AWD",
+      "price_usd": 128600,
+      "currency": "USD",
+      "mileage": 22,
+      "seating": 5,
+      "safety_rating": 5.0,
+      "boot_space_liters": 550,
+      "engine": "4.0L Biturbo V8 with EQ Boost 48V Hybrid",
+      "description": "The pinnacle of executive automotive refinement, seamlessly blending effortless V8 mild-hybrid power with first-class cabin comfort.",
+      "is_featured": false,
+      "tags": ["Executive Luxury", "Flagship", "Air Suspension"],
+      "specs": {
+        "horsepower": 496,
+        "torque_lb_ft": 516
+      },
+      "performance": {
+        "zero_to_sixty_sec": 4.3,
+        "top_speed_mph": 155
+      },
+      "dimensions": {
+        "length_mm": 5289,
+        "width_mm": 1954,
+        "height_mm": 1503,
+        "wheelbase_mm": 3216
+      },
+      "features": [
+        "AIRMATIC Air Suspension with E-ACTIVE BODY CONTROL",
+        "MBUX Augmented Reality Head-Up Display",
+        "Executive Rear Seating with Calf Massage",
+        "Burmester High-End 4D Surround Audio (31 Speakers)",
+        "Digital Light Matrix Projection System",
+        "Rear-Axle Steering (Up to 10\u00b0 angle)"
+      ],
+      "image": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["sedan", "hybrid", "luxury", "awd"]
+    },
+    {
+      "id": "audi-rs7-performance-2024",
+      "brand_slug": "audi",
+      "model": "RS7",
+      "variant": "Performance Sportback",
+      "year": 2024,
+      "body_type": "Sedan",
+      "fuel_type": "Petrol",
+      "transmission": "Automatic",
+      "drivetrain": "AWD",
+      "price_usd": 127800,
+      "currency": "USD",
+      "mileage": 18,
+      "seating": 5,
+      "safety_rating": 5.0,
+      "boot_space_liters": 535,
+      "engine": "4.0L Twin-Turbo TFSI V8",
+      "description": "A widebody five-door grand tourer coupling 621 horsepower with quattro confidence and sleek aerodynamic styling.",
+      "is_featured": false,
+      "tags": ["Sportback", "Twin Turbo V8", "Quattro AWD"],
+      "specs": {
+        "horsepower": 621,
+        "torque_lb_ft": 627
+      },
+      "performance": {
+        "zero_to_sixty_sec": 3.3,
+        "top_speed_mph": 190,
+        "lateral_g": 1.02
+      },
+      "dimensions": {
+        "length_mm": 5009,
+        "width_mm": 1950,
+        "height_mm": 1424,
+        "wheelbase_mm": 2930
+      },
+      "features": [
+        "Quattro AWD with Self-Locking Center Differential",
+        "RS Sport Exhaust with Oval Black Tips",
+        "Dynamic Ride Control (DRC) Suspension",
+        "HD Matrix LED Headlights with Audi Laser Light",
+        "Bang & Olufsen 3D Advanced Sound System",
+        "22-inch Lightweight Forged Wheels"
+      ],
+      "image": "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["sedan", "petrol", "performance", "awd"]
+    },
+    {
+      "id": "tesla-model-s-plaid-2024",
+      "brand_slug": "tesla",
+      "model": "Model S",
+      "variant": "Plaid",
+      "year": 2024,
+      "body_type": "Sedan",
+      "fuel_type": "Electric",
+      "transmission": "Direct-Drive",
+      "drivetrain": "AWD",
+      "price_usd": 89990,
+      "currency": "USD",
+      "mileage": 359,
+      "seating": 5,
+      "safety_rating": 5.0,
+      "boot_space_liters": 709,
+      "engine": "Tri-Motor AWD with Carbon-Sleeved Rotors",
+      "description": "Hypercar acceleration in a family sedan with 1,020 horsepower and sub-2-second 0-60 sprint capability.",
+      "is_featured": false,
+      "tags": ["Plaid", "Tri-Motor", "Fast EV"],
+      "specs": {
+        "horsepower": 1020,
+        "torque_lb_ft": 1050
+      },
+      "performance": {
+        "zero_to_sixty_sec": 1.99,
+        "top_speed_mph": 200
+      },
+      "dimensions": {
+        "length_mm": 4970,
+        "width_mm": 1964,
+        "height_mm": 1445,
+        "wheelbase_mm": 2960
+      },
+      "features": [
+        "Tri-Motor Powertrain with Torque Vectoring",
+        "17-inch Cinematic OLED Touchscreen (2200x1300)",
+        "Full Self-Driving Capability Hardware 4.0",
+        "Adaptive Air Suspension with Predictive Geo-Tagging",
+        "22-Speaker 960W Audio with Active Noise Cancellation",
+        "Rear 8-inch Passenger Gaming Display"
+      ],
+      "image": "https://images.unsplash.com/photo-1536700503339-1e4b06520771?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1536700503339-1e4b06520771?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["sedan", "electric", "performance", "awd"]
+    },
+    {
+      "id": "porsche-cayenne-turbo-gt-2024",
+      "brand_slug": "porsche",
+      "model": "Cayenne",
+      "variant": "Turbo GT Coupe",
+      "year": 2024,
+      "body_type": "SUV",
+      "fuel_type": "Petrol",
+      "transmission": "Automatic",
+      "drivetrain": "AWD",
+      "price_usd": 196300,
+      "currency": "USD",
+      "mileage": 17,
+      "seating": 4,
+      "safety_rating": 5.0,
+      "boot_space_liters": 549,
+      "engine": "4.0L Twin-Turbo V8",
+      "description": "N\u00fcrburgring record-holder SUV engineered exclusively as a Coupe with ferocious V8 power and sports-car agility.",
+      "is_featured": false,
+      "tags": ["High-Performance SUV", "Twin Turbo V8", "Track Record"],
+      "specs": {
+        "horsepower": 650,
+        "torque_lb_ft": 626
+      },
+      "performance": {
+        "zero_to_sixty_sec": 3.1,
+        "top_speed_mph": 189,
+        "lateral_g": 1.04
+      },
+      "dimensions": {
+        "length_mm": 4932,
+        "width_mm": 1995,
+        "height_mm": 1636,
+        "wheelbase_mm": 2895
+      },
+      "features": [
+        "Porsche Dynamic Chassis Control (PDCC) Active Roll Stabilisation",
+        "Central Titanium Dual Exhaust System",
+        "Carbon Fiber Roof & Rear Diffuser Blade",
+        "PCCB Ceramic Composite Brakes as Standard",
+        "Rear-Axle Steering and Specially Tuned 3-Chamber Air Suspension",
+        "Matrix LED Headlights with Porsche Design"
+      ],
+      "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["suv", "petrol", "performance", "awd", "track-focused"]
+    },
+    {
+      "id": "range-rover-sv-2024",
+      "brand_slug": "land-rover",
+      "model": "Range Rover",
+      "variant": "SV Long Wheelbase",
+      "year": 2024,
+      "body_type": "SUV",
+      "fuel_type": "Hybrid",
+      "transmission": "Automatic",
+      "drivetrain": "AWD",
+      "price_usd": 234000,
+      "currency": "USD",
+      "mileage": 20,
+      "seating": 4,
+      "safety_rating": 5.0,
+      "boot_space_liters": 818,
+      "engine": "4.4L Twin-Turbo V8 with Mild Hybrid",
+      "description": "The quintessential luxury SUV, handcrafted by Special Vehicle Operations for unmatched presence, comfort, and all-terrain majesty.",
+      "is_featured": false,
+      "tags": ["Flagship SUV", "SV Bespoke", "First Class Comfort"],
+      "specs": {
+        "horsepower": 606,
+        "torque_lb_ft": 553
+      },
+      "performance": {
+        "zero_to_sixty_sec": 4.4,
+        "top_speed_mph": 162
+      },
+      "dimensions": {
+        "length_mm": 5252,
+        "width_mm": 2047,
+        "height_mm": 1870,
+        "wheelbase_mm": 3197
+      },
+      "features": [
+        "SV Signature Suite with Electrically Deployable Club Table",
+        "White Ceramic Controls and Marquetry Veneers",
+        "Tailgate Event Suite with Leather Cushions and Audio",
+        "Meridian Signature Sound (35 Speakers, 1600W)",
+        "Electronic Air Suspension with Dynamic Response Pro",
+        "All-Wheel Steering with Class-Leading 11.4m Turning Circle"
+      ],
+      "image": "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["suv", "hybrid", "luxury", "awd"]
+    },
+    {
+      "id": "rivian-r1s-quad-2024",
+      "brand_slug": "rivian",
+      "model": "R1S",
+      "variant": "Quad-Motor AWD Max Pack",
+      "year": 2024,
+      "body_type": "SUV",
+      "fuel_type": "Electric",
+      "transmission": "Direct-Drive",
+      "drivetrain": "AWD",
+      "price_usd": 105900,
+      "currency": "USD",
+      "mileage": 321,
+      "seating": 7,
+      "safety_rating": 5.0,
+      "boot_space_liters": 882,
+      "engine": "Quad-Motor Independent Wheel Drive",
+      "description": "The ultimate 7-seat all-electric adventure SUV, capable of tackling deep rock crawls and sprinting to 60 in 3 seconds.",
+      "is_featured": false,
+      "tags": ["7 Seater", "Adventure EV", "Quad Motor"],
+      "specs": {
+        "horsepower": 835,
+        "torque_lb_ft": 908
+      },
+      "performance": {
+        "zero_to_sixty_sec": 3.0,
+        "top_speed_mph": 130
+      },
+      "dimensions": {
+        "length_mm": 5100,
+        "width_mm": 2015,
+        "height_mm": 1820,
+        "wheelbase_mm": 3075
+      },
+      "features": [
+        "Quad-Motor Independent Torque Vectoring (All 4 Wheels)",
+        "Hydraulic Roll Control System",
+        "Adjustable Ground Clearance (8 to 15 inches)",
+        "Large Front Trunk (Frunk) with 311 Liters",
+        "Camp Mode with Leveling Air Suspension",
+        "Rivian Elevation Audio by Meridian"
+      ],
+      "image": "https://images.unsplash.com/photo-1551830820-330a71b99659?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1551830820-330a71b99659?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["suv", "electric", "performance", "awd"]
+    },
+    {
+      "id": "bentley-continental-gt-speed-2024",
+      "brand_slug": "bentley",
+      "model": "Continental GT",
+      "variant": "Speed Edition 12",
+      "year": 2024,
+      "body_type": "Coupe",
+      "fuel_type": "Petrol",
+      "transmission": "Dual-Clutch",
+      "drivetrain": "AWD",
+      "price_usd": 302100,
+      "currency": "USD",
+      "mileage": 15,
+      "seating": 4,
+      "safety_rating": 5.0,
+      "boot_space_liters": 358,
+      "engine": "6.0L Twin-Turbo W12",
+      "description": "The quintessential British Grand Tourer offering supreme W12 effortless thrust and bespoke handcrafted interior perfection.",
+      "is_featured": false,
+      "tags": ["W12 Engine", "Grand Tourer", "Bespoke British"],
+      "specs": {
+        "horsepower": 650,
+        "torque_lb_ft": 664
+      },
+      "performance": {
+        "zero_to_sixty_sec": 3.5,
+        "top_speed_mph": 208
+      },
+      "dimensions": {
+        "length_mm": 4850,
+        "width_mm": 1954,
+        "height_mm": 1405,
+        "wheelbase_mm": 2851
+      },
+      "features": [
+        "Iconic 6.0L Twin-Turbocharged W12 Engine",
+        "Electronic All-Wheel Steering",
+        "Bentley Dynamic Ride 48V Active Anti-Roll",
+        "Rotating Dashboard Display (Analog / 12.3\" Screen / Clean Wood)",
+        "Diamond-in-Diamond Quilting with Hand-Stitched Leather",
+        "Carbon-Silicon Carbide (CSiC) Brakes"
+      ],
+      "image": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["coupe", "petrol", "luxury", "performance", "awd"]
+    },
+    {
+      "id": "mercedes-maybach-s680-2024",
+      "brand_slug": "mercedes-maybach",
+      "model": "S-Class",
+      "variant": "S 680 4MATIC V12",
+      "year": 2024,
+      "body_type": "Sedan",
+      "fuel_type": "Petrol",
+      "transmission": "Automatic",
+      "drivetrain": "AWD",
+      "price_usd": 234300,
+      "currency": "USD",
+      "mileage": 14,
+      "seating": 4,
+      "safety_rating": 5.0,
+      "boot_space_liters": 505,
+      "engine": "6.0L Twin-Turbo V12",
+      "description": "The ultimate expression of Maybach luxury, pairing an effortless 6.0-liter V12 twin-turbo with first-class rear lounge amenities.",
+      "is_featured": false,
+      "tags": ["Maybach", "V12 Engine", "Chauffeur Driven"],
+      "specs": {
+        "horsepower": 621,
+        "torque_lb_ft": 664
+      },
+      "performance": {
+        "zero_to_sixty_sec": 4.4,
+        "top_speed_mph": 155
+      },
+      "dimensions": {
+        "length_mm": 5469,
+        "width_mm": 1921,
+        "height_mm": 1510,
+        "wheelbase_mm": 3396
+      },
+      "features": [
+        "Handcrafted 6.0L Twin-Turbocharged V12",
+        "First-Class Rear Compartment with Silver-Plated Flutes",
+        "Two-Tone Exterior Paint Finish with Precise Pinstripe",
+        "Active Road Noise Compensation System",
+        "Electrically Operated Comfort Rear Doors",
+        "Refrigerated Compartment in Rear Armrest"
+      ],
+      "image": "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["sedan", "petrol", "luxury", "awd"]
+    },
+    {
+      "id": "audi-e-tron-gt-rs-2024",
+      "brand_slug": "audi",
+      "model": "e-tron GT",
+      "variant": "RS e-tron GT",
+      "year": 2024,
+      "body_type": "Sedan",
+      "fuel_type": "Electric",
+      "transmission": "Direct-Drive",
+      "drivetrain": "AWD",
+      "price_usd": 147100,
+      "currency": "USD",
+      "mileage": 249,
+      "seating": 5,
+      "safety_rating": 5.0,
+      "boot_space_liters": 405,
+      "engine": "Dual Synchronous Electric Motors with 2-Speed Rear Gearbox",
+      "description": "Audi's flagship electric gran turismo, pairing sculptural design with 637 horsepower of instantaneous electric acceleration.",
+      "is_featured": false,
+      "tags": ["Electric GT", "800V Architecture", "RS Performance"],
+      "specs": {
+        "horsepower": 637,
+        "torque_lb_ft": 612,
+        "voltage_architecture": 800,
+        "dc_fast_charge_kw": 270
+      },
+      "performance": {
+        "zero_to_sixty_sec": 2.9,
+        "top_speed_mph": 155
+      },
+      "dimensions": {
+        "length_mm": 4989,
+        "width_mm": 1964,
+        "height_mm": 1414,
+        "wheelbase_mm": 2900
+      },
+      "features": [
+        "800-Volt Charging System (270kW Max Rate)",
+        "Three-Chamber Adaptive Air Suspension",
+        "Carbon Fiber Roof and Exterior Mirror Housings",
+        "Tungsten Carbide Coated Brake Rotors (PSCB)",
+        "e-tron Sport Sound Synthesizer",
+        "Matrix LED Headlights with Audi Laser Light"
+      ],
+      "image": "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["sedan", "electric", "performance", "awd"]
+    },
+    {
+      "id": "mclaren-750s-2024",
+      "brand_slug": "mclaren",
+      "model": "750S",
+      "variant": "Coupe",
+      "year": 2024,
+      "body_type": "Sports",
+      "fuel_type": "Petrol",
+      "transmission": "Dual-Clutch",
+      "drivetrain": "RWD",
+      "price_usd": 324000,
+      "currency": "USD",
+      "mileage": 18,
+      "seating": 2,
+      "safety_rating": 5.0,
+      "boot_space_liters": 150,
+      "engine": "4.0L Twin-Turbocharged V8 (M840T)",
+      "description": "Lighter, more powerful, and dynamically sublime, the 750S redefines the supercar benchmark with pure carbon-fiber precision.",
+      "is_featured": true,
+      "tags": ["Supercar", "Carbon Tub", "Twin Turbo V8"],
+      "specs": {
+        "horsepower": 740,
+        "torque_lb_ft": 590
+      },
+      "performance": {
+        "zero_to_sixty_sec": 2.7,
+        "top_speed_mph": 206,
+        "lateral_g": 1.22,
+        "braking_distance_ft": 95
+      },
+      "dimensions": {
+        "length_mm": 4569,
+        "width_mm": 1930,
+        "height_mm": 1196,
+        "wheelbase_mm": 2670
+      },
+      "features": [
+        "Carbon Fiber Monocage II Chassis",
+        "Proactive Chassis Control III (PCC III)",
+        "Enlarged Active Rear Wing with Airbrake Function",
+        "Ultralight 10-Spoke Forged Alloy Wheels",
+        "McLaren Control Launcher (MCL) Driver Presets",
+        "Central Exit Stainless Steel Exhaust"
+      ],
+      "image": "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["sports", "petrol", "performance", "track-focused"]
+    },
+    {
+      "id": "chevrolet-corvette-z06-2024",
+      "brand_slug": "chevrolet",
+      "model": "Corvette",
+      "variant": "Z06 3LZ with Z07 Package",
+      "year": 2024,
+      "body_type": "Sports",
+      "fuel_type": "Petrol",
+      "transmission": "Dual-Clutch",
+      "drivetrain": "RWD",
+      "price_usd": 138500,
+      "currency": "USD",
+      "mileage": 15,
+      "seating": 2,
+      "safety_rating": 5.0,
+      "boot_space_liters": 357,
+      "engine": "5.5L Flat-Plane Crank Naturally Aspirated LT6 V8",
+      "description": "An American supercar revolution powered by a screaming 8,600-rpm flat-plane crank V8 with mid-engine track dominance.",
+      "is_featured": false,
+      "tags": ["Flat-Plane V8", "8600 RPM", "Mid Engine"],
+      "specs": {
+        "horsepower": 670,
+        "torque_lb_ft": 460
+      },
+      "performance": {
+        "zero_to_sixty_sec": 2.6,
+        "top_speed_mph": 189,
+        "lateral_g": 1.22
+      },
+      "dimensions": {
+        "length_mm": 4688,
+        "width_mm": 2025,
+        "height_mm": 1235,
+        "wheelbase_mm": 2722
+      },
+      "features": [
+        "8,600 RPM Flat-Plane Crank NA V8 (Highest NA V8 HP in Production)",
+        "Carbon Fiber Aero Package (High Rear Wing & Ground Ground Effects)",
+        "Brembo Carbon Ceramic Brakes",
+        "Magnetic Selective Ride Control 4.0",
+        "Performance Data Recorder (PDR)",
+        "Bespoke Level 3 Leather & Carbon Fiber Interior"
+      ],
+      "image": "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["sports", "petrol", "performance", "track-focused"]
+    },
+    {
+      "id": "aston-martin-dbx707-2024",
+      "brand_slug": "aston-martin",
+      "model": "DBX",
+      "variant": "DBX707",
+      "year": 2024,
+      "body_type": "SUV",
+      "fuel_type": "Petrol",
+      "transmission": "Automatic",
+      "drivetrain": "AWD",
+      "price_usd": 242000,
+      "currency": "USD",
+      "mileage": 17,
+      "seating": 5,
+      "safety_rating": 5.0,
+      "boot_space_liters": 638,
+      "engine": "4.0L Twin-Turbocharged AMG V8",
+      "description": "The fastest and most powerful luxury SUV on earth, combining British elegance with thunderous 697 horsepower performance.",
+      "is_featured": false,
+      "tags": ["British Luxury", "707 PS", "Super SUV"],
+      "specs": {
+        "horsepower": 697,
+        "torque_lb_ft": 663
+      },
+      "performance": {
+        "zero_to_sixty_sec": 3.1,
+        "top_speed_mph": 193
+      },
+      "dimensions": {
+        "length_mm": 5039,
+        "width_mm": 1998,
+        "height_mm": 1680,
+        "wheelbase_mm": 3060
+      },
+      "features": [
+        "Wet-Clutch 9-Speed Transmission for Rapid Launches",
+        "Carbon Ceramic Brakes (420mm Front Discs)",
+        "Electronic Active Roll Control (eARC) System",
+        "Quad-Exit Active Valve Exhaust System",
+        "Carbon Fiber Front Splitter & Extended Rear Wing",
+        "Handcrafted Bridge of Weir Semi-Aniline Leather"
+      ],
+      "image": "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["suv", "petrol", "luxury", "performance", "awd"]
+    },
+    {
+      "id": "rimac-nevera-2024",
+      "brand_slug": "rimac",
+      "model": "Nevera",
+      "variant": "Time Attack Special",
+      "year": 2024,
+      "body_type": "Hypercar",
+      "fuel_type": "Electric",
+      "transmission": "Direct-Drive",
+      "drivetrain": "AWD",
+      "price_usd": 2200000,
+      "currency": "USD",
+      "mileage": 304,
+      "seating": 2,
+      "safety_rating": 5.0,
+      "boot_space_liters": 100,
+      "engine": "Quad Bespoke Permanent-Magnet Electric Motors",
+      "description": "The pinnacle of electric hypercar performance, holding over 20 world acceleration records with 1,914 horsepower.",
+      "is_featured": true,
+      "tags": ["World Record", "1914 HP", "Hypercar"],
+      "specs": {
+        "horsepower": 1914,
+        "torque_lb_ft": 1741,
+        "battery_capacity_kwh": 120.0
+      },
+      "performance": {
+        "zero_to_sixty_sec": 1.74,
+        "top_speed_mph": 258,
+        "lateral_g": 1.35,
+        "braking_distance_ft": 88
+      },
+      "dimensions": {
+        "length_mm": 4750,
+        "width_mm": 1986,
+        "height_mm": 1208,
+        "wheelbase_mm": 2745
+      },
+      "features": [
+        "All-Wheel Torque Vectoring 2.0 (Calculates 100 times per second)",
+        "Full Carbon Fiber Monocoque with Integrated Battery Pack",
+        "Active Aerodynamic Wings, Diffusers, and Bonnet Flaps",
+        "120 kWh Liquid-Cooled Lithium Manganese Nickel Battery",
+        "Brembo CCMR Carbon-Ceramic Matrix Brakes",
+        "AI Driver Coach Telemetry System"
+      ],
+      "image": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80",
+      "gallery": [
+        "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "category_slugs": ["hypercar", "electric", "performance", "awd", "track-focused"]
+    }
+  ]
+}
