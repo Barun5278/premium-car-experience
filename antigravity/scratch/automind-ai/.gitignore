@@ -1,0 +1,39 @@
+# Node / Next.js
+node_modules/
+.next/
+out/
+build/
+.env*.local
+.env
+
+# Python / Backend / ML
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+backend/.venv/
+ml/.venv/
+.venv/
+venv/
+ENV/
+env/
+backend/.env
+ml/.env
+
+# Machine Learning model binaries & large data
+ml/data/raw/*
+!ml/data/raw/.gitkeep
+ml/data/processed/*
+!ml/data/processed/.gitkeep
+ml/models/*.joblib
+ml/models/*.pkl
+ml/models/*.json
+!ml/models/.gitkeep
+
+# IDEs & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

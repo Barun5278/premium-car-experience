@@ -1,0 +1,11 @@
+{
+  "userSettings": {
+    "globalPermissionGrants": {
+      "allow": [
+        "command(node -v; npm -v; python --version; git --version)"
+      ]
+    },
+    "remoteControlHostname": "barunchauhan-solar-rocket",
+    "themeMode": "THEME_MODE_INHERIT"
+  }
+}

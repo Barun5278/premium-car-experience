@@ -1,0 +1,13 @@
+{
+  "name": "automind-ai-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "npm run dev --prefix frontend",
+    "build:frontend": "npm run build --prefix frontend",
+    "lint:frontend": "npm run lint --prefix frontend",
+    "dev:backend": "cd backend && uvicorn main:app --reload --port 8000",
+    "train:ml": "cd ml && python src/train.py"
+  },
+  "keywords": ["automotive", "ai", "machine-learning", "nextjs", "fastapi", "threejs", "gemini"]
+}

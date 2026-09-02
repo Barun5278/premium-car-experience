@@ -1,0 +1,40 @@
+npm error code ERESOLVE
+npm error ERESOLVE unable to resolve dependency tree
+npm error
+npm error While resolving: automind-ai-frontend@0.1.0
+npm error Found: react@19.2.8
+npm error node_modules/react
+npm error   react@"^19.0.0" from the root project
+npm error   peer react@"*" from expo@57.0.18
+npm error   node_modules/expo
+npm error     peerOptional expo@">=43.0" from @react-three/fiber@8.18.0
+npm error     node_modules/@react-three/fiber
+npm error       @react-three/fiber@"^8.18.0" from the root project
+npm error       1 more (@react-three/drei)
+npm error     peer expo@"*" from @expo/metro-runtime@57.0.14
+npm error     node_modules/@expo/metro-runtime
+npm error       peerOptional @expo/metro-runtime@"*" from expo@57.0.18
+npm error     3 more (expo-asset, expo-file-system, expo-gl)
+npm error   9 more (@expo/metro-runtime, react-dom, react-native, ...)
+npm error
+npm error Could not resolve dependency:
+npm error peer react@">=18 <19" from @react-three/fiber@8.18.0
+npm error node_modules/@react-three/fiber
+npm error   @react-three/fiber@"^8.18.0" from the root project
+npm error   peer @react-three/fiber@"^8" from @react-three/drei@9.122.0
+npm error   node_modules/@react-three/drei
+npm error     @react-three/drei@"^9.122.0" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry
+npm error this command with --force or --legacy-peer-deps
+npm error to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error C:\Users\chauh\AppData\Local\npm-cache\_logs\2026-08-31T19_02_35_997Z-eresolve-report.txt
+npm notice
+npm notice New minor version of npm available! 11.11.0 -> 11.19.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.19.1
+npm notice To update run: npm install -g npm@11.19.1
+npm notice
+npm error A complete log of this run can be found in: C:\Users\chauh\AppData\Local\npm-cache\_logs\2026-08-31T19_02_35_997Z-debug-0.log

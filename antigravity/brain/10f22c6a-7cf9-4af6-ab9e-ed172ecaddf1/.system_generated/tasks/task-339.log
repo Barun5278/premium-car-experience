@@ -1,0 +1,36 @@
+
+> automind-ai-frontend@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/28) ...
+   Generating static pages (7/28) 
+   Generating static pages (14/28) 
+   Generating static pages (21/28) 
+ ✓ Generating static pages (28/28)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size     First Load JS
+┌ ○ /                                       10.7 kB         154 kB
+├ ○ /_not-found                             138 B          87.4 kB
+├ ○ /explore                                144 B           170 kB
+└ ● /explore/[id]                           144 B           170 kB
+    ├ /explore/porsche-911-gt3-rs-2024
+    ├ /explore/porsche-taycan-turbo-s-2025
+    ├ /explore/lucid-air-sapphire-2024
+    └ [+20 more paths]
++ First Load JS shared by all               87.3 kB
+  ├ chunks/117-c86a41b869f6b521.js          31.7 kB
+  ├ chunks/fd9d1056-6922f449a204c2cc.js     53.6 kB
+  └ other shared chunks (total)             1.89 kB
+
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses getStaticProps)
+
