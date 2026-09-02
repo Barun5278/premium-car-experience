@@ -93,6 +93,84 @@ def _upsert(supabase: Client, table: str, rows: list[dict[str, Any]], on_conflic
     supabase.table(table).upsert(rows, on_conflict=on_conflict).execute()
 
 
+def _fetch_slug_to_id(supabase: Client, table: str) -> dict[str, Any]:
+    """
+    Returns a slug -> id mapping for the given table by paginating PostgREST
+    (default page size is 1000; we explicitly request smaller pages to remain
+    safe across SDK versions). Every row is asserted to have a non-null
+    'slug' and 'id' to surface schema drift loudly.
+    """
+    mapping: dict[str, Any] = {}
+    page_size = 200
+    start = 0
+    while True:
+        end = start + page_size - 1
+        resp = (
+            supabase.table(table)
+            .select("id,slug")
+            .range(start, end)
+            .execute()
+        )
+        batch = resp.data or []
+        if not batch:
+            break
+        for row in batch:
+            slug = row.get("slug")
+            row_id = row.get("id")
+            if slug is None or row_id is None:
+                raise RuntimeError(
+                    f"Unexpected row shape from {table}: {row!r}; "
+                    f"expected non-null 'id' and 'slug'."
+                )
+            mapping[slug] = row_id
+        if len(batch) < page_size:
+            break
+        start += page_size
+    return mapping
+
+
+def _resolve_or_die(
+    items: list[dict[str, Any]],
+    slug_key: str,
+    id_key: str,
+    mapping: dict[str, Any],
+    label: str,
+) -> None:
+    """
+    For every item in `items`, ensure `items[slug_key]` exists as a key in
+    `mapping`. On success, set `items[id_key] = mapping[slug]`. On failure,
+    print a clear list of unresolved slugs and exit 4.
+
+    This function does NOT mutate `mapping`. Use direct index lookup (not
+    .pop()) so a missing key fails with KeyError(slug) and the message is
+    captured by the error handler below.
+    """
+    unresolved: list[str] = []
+    seen_slugs: set[str] = set()
+    for item in items:
+        slug = item.get(slug_key)
+        if slug is None:
+            unresolved.append(f"<missing {slug_key}>")
+            continue
+        if slug not in mapping:
+            unresolved.append(slug)
+            continue
+        if slug in seen_slugs:
+            # Same slug repeated across multiple rows is fine (e.g. several
+            # vehicles referencing the same brand). We do not mutate the
+            # mapping; we just re-read it.
+            pass
+        seen_slugs.add(slug)
+        item[id_key] = mapping[slug]
+    if unresolved:
+        unique = sorted(set(unresolved))
+        sys.stderr.write(
+            f"ERROR: could not resolve {len(unresolved)} {label} slug(s). "
+            f"Unresolved: {unique}\n"
+        )
+        sys.exit(4)
+
+
 def _require_env(name: str) -> str:
     value = os.environ.get(name, "").strip()
     if not value:
@@ -336,18 +414,23 @@ def main() -> int:
     _upsert(supabase, "features", feature_rows, on_conflict="slug")
 
     # 4) vehicles (need brand_id; resolve from brand slug via PostgREST select)
-    print("[seed] Resolving brand_id mapping...")
-    brand_resp = supabase.table("brands").select("id,slug").execute()
-    brand_id_by_slug: dict[str, int] = {b["slug"]: b["id"] for b in (brand_resp.data or [])}
+    print("[seed] Resolving brand_id mapping from database...")
+    brand_id_by_slug = _fetch_slug_to_id(supabase, "brands")
     if len(brand_id_by_slug) != n_brands:
         sys.stderr.write(
-            f"ERROR: expected {n_brands} brand rows after upsert, found {len(brand_id_by_slug)}.\n"
+            f"ERROR: expected {n_brands} brand rows after upsert, "
+            f"found {len(brand_id_by_slug)}. The brand upsert may have failed.\n"
         )
         return 3
 
     vehicle_rows = _build_vehicle_rows(seed)
-    for row in vehicle_rows:
-        row["brand_id"] = brand_id_by_slug.pop(row.pop("brand_slug"))
+    _resolve_or_die(
+        vehicle_rows,
+        slug_key="brand_slug",
+        id_key="brand_id",
+        mapping=brand_id_by_slug,
+        label="brand",
+    )
     print(f"[seed] Upserting {n_vehicles} vehicles...")
     _upsert(supabase, "vehicles", vehicle_rows, on_conflict="id")
 
@@ -377,13 +460,23 @@ def main() -> int:
         supabase.table("vehicle_media").insert(media_rows).execute()
 
     # 7) vehicle_features (FK to features by slug; resolve feature_id)
-    print("[seed] Resolving feature_id mapping...")
-    feat_resp = supabase.table("features").select("id,slug").execute()
-    feature_id_by_slug: dict[str, int] = {f["slug"]: f["id"] for f in (feat_resp.data or [])}
+    print("[seed] Resolving feature_id mapping from database...")
+    feature_id_by_slug = _fetch_slug_to_id(supabase, "features")
+    if len(feature_id_by_slug) != n_features:
+        sys.stderr.write(
+            f"ERROR: expected {n_features} feature rows after upsert, "
+            f"found {len(feature_id_by_slug)}. The feature upsert may have failed.\n"
+        )
+        return 3
 
     vf_rows = _build_vehicle_features_rows(seed, feature_name_to_slug)
-    for row in vf_rows:
-        row["feature_id"] = feature_id_by_slug.pop(row.pop("feature_slug"))
+    _resolve_or_die(
+        vf_rows,
+        slug_key="feature_slug",
+        id_key="feature_id",
+        mapping=feature_id_by_slug,
+        label="feature",
+    )
     print(f"[seed] Upserting {len(vf_rows)} vehicle_features rows...")
     if vf_rows:
         # Same "no natural unique" concern as media; re-runs would accumulate.
@@ -399,13 +492,23 @@ def main() -> int:
             supabase.table("vehicle_features").insert(vf_rows[i:i + 200]).execute()
 
     # 8) vehicle_categories
-    print("[seed] Resolving category_id mapping...")
-    cat_resp = supabase.table("categories").select("id,slug").execute()
-    category_id_by_slug: dict[str, int] = {c["slug"]: c["id"] for c in (cat_resp.data or [])}
+    print("[seed] Resolving category_id mapping from database...")
+    category_id_by_slug = _fetch_slug_to_id(supabase, "categories")
+    if len(category_id_by_slug) != n_categories:
+        sys.stderr.write(
+            f"ERROR: expected {n_categories} category rows after upsert, "
+            f"found {len(category_id_by_slug)}. The category upsert may have failed.\n"
+        )
+        return 3
 
     vc_rows = _build_vehicle_categories_rows(seed)
-    for row in vc_rows:
-        row["category_id"] = category_id_by_slug[row.pop("category_slug")]
+    _resolve_or_die(
+        vc_rows,
+        slug_key="category_slug",
+        id_key="category_id",
+        mapping=category_id_by_slug,
+        label="category",
+    )
     print(f"[seed] Upserting {len(vc_rows)} vehicle_categories rows...")
     if vc_rows:
         for i in range(0, len(vc_rows), 100):
