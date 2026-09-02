@@ -75,6 +75,51 @@ SEED_JSON_PATH = SCRIPT_DIR / "vehicles_seed.json"
 
 
 # ---------------------------------------------------------------------------
+# Schema allowlist (DB columns per table).
+#
+# These tuples must mirror the columns declared in
+# supabase/migrations/0001_phase1_catalog.sql for each respective table.
+# The resolver strips any row field not present in the allowlist for the
+# destination table before the row is sent to Supabase. This is defense in
+# depth: the builders should never emit extra fields, but if one slips in,
+# the allowlist catches it instead of the database.
+# ---------------------------------------------------------------------------
+VEHICLES_COLUMNS: frozenset[str] = frozenset({
+    "id", "brand_id", "model", "variant", "year", "body_type", "fuel_type",
+    "transmission", "drivetrain", "price_usd", "currency", "mileage",
+    "seating", "safety_rating", "boot_space_liters", "engine", "description",
+    "is_featured", "tags",
+    # The following columns exist in the DB but are managed by triggers or
+    # server-side defaults; we deliberately do NOT insert them. Listing them
+    # here keeps the allowlist the single source of truth.
+    "search_text", "created_at", "updated_at",
+})
+VEHICLE_SPECS_COLUMNS: frozenset[str] = frozenset({
+    "vehicle_id", "horsepower", "torque_lb_ft", "battery_capacity_kwh",
+    "voltage_architecture", "dc_fast_charge_kw", "epa_range_miles",
+})
+VEHICLE_PERFORMANCE_COLUMNS: frozenset[str] = frozenset({
+    "vehicle_id", "zero_to_sixty_sec", "top_speed_mph", "braking_distance_ft",
+    "lateral_g", "quarter_mile_sec", "nurburgring_time_sec",
+})
+VEHICLE_DIMENSIONS_COLUMNS: frozenset[str] = frozenset({
+    "vehicle_id", "length_mm", "width_mm", "height_mm", "wheelbase_mm",
+    "curb_weight_kg",
+})
+VEHICLE_MEDIA_COLUMNS: frozenset[str] = frozenset({
+    "id", "vehicle_id", "kind", "storage_path", "external_url", "width",
+    "height", "alt_text", "is_primary", "sort_order",
+    "created_at",
+})
+VEHICLE_FEATURES_COLUMNS: frozenset[str] = frozenset({
+    "vehicle_id", "feature_id", "sort_order",
+})
+VEHICLE_CATEGORIES_COLUMNS: frozenset[str] = frozenset({
+    "vehicle_id", "category_id",
+})
+
+
+# ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 def _load_seed(path: Path) -> dict[str, Any]:
@@ -135,15 +180,22 @@ def _resolve_or_die(
     id_key: str,
     mapping: dict[str, Any],
     label: str,
+    allowed_columns: frozenset[str] | None = None,
 ) -> None:
     """
     For every item in `items`, ensure `items[slug_key]` exists as a key in
     `mapping`. On success, set `items[id_key] = mapping[slug]`. On failure,
     print a clear list of unresolved slugs and exit 4.
 
-    This function does NOT mutate `mapping`. Use direct index lookup (not
-    .pop()) so a missing key fails with KeyError(slug) and the message is
-    captured by the error handler below.
+    This function does NOT mutate `mapping`. It uses direct index lookup
+    (not .pop()) so a missing key is caught by the unresolved check, not a
+    raw KeyError.
+
+    After resolution, the temporary `slug_key` is removed from the row so
+    it is never sent to Supabase. If `allowed_columns` is provided, any
+    field not in that allowlist is also stripped (defense in depth: the
+    builders should not produce extra fields, but if one does, the DB will
+    not see it).
     """
     unresolved: list[str] = []
     seen_slugs: set[str] = set()
@@ -169,6 +221,27 @@ def _resolve_or_die(
             f"Unresolved: {unique}\n"
         )
         sys.exit(4)
+
+    # Strip the temporary slug key (always) and any out-of-schema fields
+    # (when an allowlist is provided). The allowlist check is per-item, not
+    # per-batch, so it also catches fields that differ across rows.
+    for item in items:
+        item.pop(slug_key, None)
+        if allowed_columns is not None:
+            extras = [k for k in item.keys() if k not in allowed_columns]
+            for k in extras:
+                item.pop(k, None)
+
+
+def _strip_to_schema(rows: list[dict[str, Any]], allowed_columns: frozenset[str]) -> None:
+    """
+    In-place strip of any field not in the destination table's allowlist.
+    Used for tables whose builders do not need slug resolution but should
+    still be protected against accidental stray fields.
+    """
+    for row in rows:
+        for k in [key for key in row.keys() if key not in allowed_columns]:
+            row.pop(k, None)
 
 
 def _require_env(name: str) -> str:
@@ -430,6 +503,7 @@ def main() -> int:
         id_key="brand_id",
         mapping=brand_id_by_slug,
         label="brand",
+        allowed_columns=VEHICLES_COLUMNS,
     )
     print(f"[seed] Upserting {n_vehicles} vehicles...")
     _upsert(supabase, "vehicles", vehicle_rows, on_conflict="id")
@@ -438,6 +512,9 @@ def main() -> int:
     spec_rows = _build_spec_rows(seed)
     perf_rows = _build_perf_rows(seed)
     dim_rows = _build_dim_rows(seed)
+    _strip_to_schema(spec_rows, VEHICLE_SPECS_COLUMNS)
+    _strip_to_schema(perf_rows, VEHICLE_PERFORMANCE_COLUMNS)
+    _strip_to_schema(dim_rows, VEHICLE_DIMENSIONS_COLUMNS)
     print(f"[seed] Upserting {len(spec_rows)} vehicle_specs, "
           f"{len(perf_rows)} vehicle_performance, {len(dim_rows)} vehicle_dimensions...")
     _upsert(supabase, "vehicle_specs", spec_rows, on_conflict="vehicle_id")
@@ -446,6 +523,7 @@ def main() -> int:
 
     # 6) vehicle_media
     media_rows = _build_media_rows(seed)
+    _strip_to_schema(media_rows, VEHICLE_MEDIA_COLUMNS)
     print(f"[seed] Upserting {len(media_rows)} vehicle_media rows...")
     # No natural unique constraint to merge on; use a deterministic temp strategy:
     # we rely on the fact that this is a fresh project in Phase 1, and on re-run
@@ -476,6 +554,7 @@ def main() -> int:
         id_key="feature_id",
         mapping=feature_id_by_slug,
         label="feature",
+        allowed_columns=VEHICLE_FEATURES_COLUMNS,
     )
     print(f"[seed] Upserting {len(vf_rows)} vehicle_features rows...")
     if vf_rows:
@@ -508,6 +587,7 @@ def main() -> int:
         id_key="category_id",
         mapping=category_id_by_slug,
         label="category",
+        allowed_columns=VEHICLE_CATEGORIES_COLUMNS,
     )
     print(f"[seed] Upserting {len(vc_rows)} vehicle_categories rows...")
     if vc_rows:
