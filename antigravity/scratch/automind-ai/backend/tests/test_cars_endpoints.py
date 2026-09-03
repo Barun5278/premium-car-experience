@@ -213,3 +213,53 @@ def test_list_cars_empty_when_no_client(client, monkeypatch):
         "limit": 5,
         "totalPages": 0,
     }
+
+
+# -------------------------------------------------------------------
+# Regression tests for the Supabase order/range/limit bug
+#
+# Background: in postgrest-py 2.x, ``client.table(x).select(...)`` returns
+# a ``SyncSelectRequestBuilder`` which has ``order``/``range``/``limit``.
+# Any call to a filter method (``eq``, ``gte``, ``in_``, ``text_search``)
+# returns a ``SyncFilterRequestBuilder`` which has NONE of those. Calling
+# ``.order()`` on a filter builder raises:
+#   AttributeError: 'SyncQueryRequestBuilder' object has no attribute 'order'
+# -------------------------------------------------------------------
+def test_postgrest_select_builder_has_order_range_limit():
+    from postgrest._sync.request_builder import (
+        SyncFilterRequestBuilder,
+        SyncSelectRequestBuilder,
+    )
+    assert hasattr(SyncSelectRequestBuilder, "order")
+    assert hasattr(SyncSelectRequestBuilder, "range")
+    assert hasattr(SyncSelectRequestBuilder, "limit")
+    assert not hasattr(SyncFilterRequestBuilder, "order")
+
+
+def test_list_cars_sort_by_price_desc_runs_without_500(client):
+    resp = client.get("/api/v1/cars?sort_by=price_desc&limit=10")
+    assert resp.status_code == 200, resp.text
+    items = resp.json()["items"]
+    prices = [i["price"] for i in items]
+    assert prices == sorted(prices, reverse=True)
+
+
+def test_list_cars_search_runs_without_500(client):
+    resp = client.get("/api/v1/cars?search=porsche&limit=10")
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert "items" in body
+    assert "total" in body
+
+
+def test_list_cars_search_with_filter_and_sort_runs_without_500(client):
+    resp = client.get(
+        "/api/v1/cars?search=Porsche&body_type=Sedan&sort_by=price_desc&limit=10"
+    )
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert "items" in body
+    assert "total" in body
+    for item in body["items"]:
+        assert item["bodyType"] == "Sedan"
+        assert item["make"] == "Porsche"

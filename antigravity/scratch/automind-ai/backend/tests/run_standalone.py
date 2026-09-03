@@ -247,6 +247,90 @@ def test_health_endpoint_still_works(c: TestClient):
 
 
 # -------------------------------------------------------------------
+# Regression tests for the Supabase order/range/limit bug
+#
+# Background: in postgrest-py 2.x, ``client.table(x).select(...)`` returns
+# a ``SyncSelectRequestBuilder`` which has ``order``/``range``/``limit``.
+# Any call to a filter method (``eq``, ``gte``, ``in_``, ``text_search``)
+# returns a ``SyncFilterRequestBuilder`` which has NONE of those. Calling
+# ``.order()`` on a filter builder raises:
+#   AttributeError: 'SyncQueryRequestBuilder' object has no attribute 'order'
+#
+# The fix in car_service.get_cars is to apply order/range/limit BEFORE
+# any filter, so the chain stays on the select builder while those calls
+# happen. These tests assert the SDK behaviour directly so that future
+# upgrades of postgrest-py / supabase-py cannot silently regress the fix.
+# -------------------------------------------------------------------
+def test_postgrest_select_builder_has_order_range_limit():
+    """The select builder supports the trio; the filter builder must not."""
+    from postgrest._sync.request_builder import (
+        SyncFilterRequestBuilder,
+        SyncSelectRequestBuilder,
+    )
+    assert hasattr(SyncSelectRequestBuilder, "order"), (
+        "postgrest-py upgrade: SyncSelectRequestBuilder no longer has .order(); "
+        "the CarService fix may need to change."
+    )
+    assert hasattr(SyncSelectRequestBuilder, "range"), (
+        "postgrest-py upgrade: SyncSelectRequestBuilder no longer has .range(); "
+        "the CarService fix may need to change."
+    )
+    assert hasattr(SyncSelectRequestBuilder, "limit"), (
+        "postgrest-py upgrade: SyncSelectRequestBuilder no longer has .limit(); "
+        "the CarService fix may need to change."
+    )
+    assert not hasattr(SyncFilterRequestBuilder, "order"), (
+        "postgrest-py upgrade: SyncFilterRequestBuilder now has .order(); "
+        "review whether the CarService order-before-filter guard is still needed."
+    )
+
+
+def test_list_cars_sort_by_price_desc_runs_without_500(c: TestClient):
+    """
+    Regression: ?sort_by=price_desc previously triggered
+    ``AttributeError: 'SyncQueryRequestBuilder' object has no attribute 'order'``
+    on every list call. The fix moves .order() before any filter, so this
+    must now return 200 and an ordered (descending by price) list.
+    """
+    resp = c.get("/api/v1/cars?sort_by=price_desc&limit=10")
+    assert resp.status_code == 200, resp.text
+    items = resp.json()["items"]
+    prices = [i["price"] for i in items]
+    assert prices == sorted(prices, reverse=True), f"prices not desc: {prices}"
+
+
+def test_list_cars_search_runs_without_500(c: TestClient):
+    """
+    Regression: ?search=... previously chained .text_search() then .order(),
+    which raised AttributeError because .text_search() downgrades the
+    builder. The fix calls .order()/.range() before .text_search().
+    """
+    resp = c.get("/api/v1/cars?search=porsche&limit=10")
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    # Whether or not the fake has populated search_text for the test fixture,
+    # the call must complete without a 500. The body is at least well-formed.
+    assert "items" in body
+    assert "total" in body
+
+
+def test_list_cars_search_with_filter_and_sort_runs_without_500(c: TestClient):
+    """
+    Regression: the original failing call combined text_search + filters +
+    order. We re-create that exact combination to make sure the
+    order-before-filter guard covers all three.
+    """
+    resp = c.get("/api/v1/cars?search=Porsche&body_type=Sedan&sort_by=price_desc&limit=10")
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert "items" in body
+    assert "total" in body
+    for item in body["items"]:
+        assert item["bodyType"] == "Sedan"
+        assert item["make"] == "Porsche"
+
+
+# -------------------------------------------------------------------
 # Main
 # -------------------------------------------------------------------
 TEST_FUNCTIONS: List[Tuple[str, Callable]] = [
@@ -267,6 +351,11 @@ TEST_FUNCTIONS: List[Tuple[str, Callable]] = [
     ("test_compare_missing_id_silently_skipped", test_compare_missing_id_silently_skipped),
     ("test_list_cars_empty_when_no_client", test_list_cars_empty_when_no_client),
     ("test_health_endpoint_still_works", test_health_endpoint_still_works),
+    # Regression tests for the Supabase order/range/limit bug.
+    ("test_postgrest_select_builder_has_order_range_limit", test_postgrest_select_builder_has_order_range_limit),
+    ("test_list_cars_sort_by_price_desc_runs_without_500", test_list_cars_sort_by_price_desc_runs_without_500),
+    ("test_list_cars_search_runs_without_500", test_list_cars_search_runs_without_500),
+    ("test_list_cars_search_with_filter_and_sort_runs_without_500", test_list_cars_search_with_filter_and_sort_runs_without_500),
 ]
 
 
@@ -274,8 +363,12 @@ def main() -> int:
     c = make_client()
     results: List[TestResult] = []
     for name, fn in TEST_FUNCTIONS:
-        # Tests that need a different client (empty case) handle their own.
+        # Tests that take no arguments (e.g. pure-Python SDK assertions) or
+        # that build their own client (e.g. test_list_cars_empty_when_no_client)
+        # are invoked without the shared TestClient.
         if name == "test_list_cars_empty_when_no_client":
+            results.append(run(name, fn))
+        elif name == "test_postgrest_select_builder_has_order_range_limit":
             results.append(run(name, fn))
         else:
             results.append(run(name, lambda fn=fn: fn(c)))

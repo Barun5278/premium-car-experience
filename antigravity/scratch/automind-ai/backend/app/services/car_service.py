@@ -67,6 +67,13 @@ class CarService:
         List vehicles with optional filtering, pagination, and sorting.
 
         `filters` may be either a CarFilterQuery instance or None.
+
+        Note on Supabase SDK ordering: in postgrest-py 2.x, the chain
+        ``client.table(x).select(...)`` returns a ``SyncSelectRequestBuilder``,
+        but any call to a filter method (``eq``, ``gte``, ``in_``,
+        ``text_search``) returns a ``SyncFilterRequestBuilder`` which has
+        no ``order``/``range``/``limit``. So the order/range/limit calls
+        MUST be made on the select builder BEFORE any filter is applied.
         """
         page = max(1, int(getattr(filters, "page", 1) or 1))
         limit = max(1, min(API_MAX_LIMIT, int(getattr(filters, "limit", API_DEFAULT_LIMIT) or API_DEFAULT_LIMIT)))
@@ -79,7 +86,27 @@ class CarService:
         # Build the base query.
         query = client.table(VEHICLE_TABLE).select("*", count="exact")
 
-        # Filters
+        # Sorting. The allowlist prevents arbitrary column names. Must be
+        # applied BEFORE any filter to keep the builder as
+        # SyncSelectRequestBuilder.
+        sort_column = SORT_COLUMN_MAP.get(str(sort_by), "is_featured")
+        if sort_column in {"price_usd", "year", "is_featured", "model"}:
+            query = query.order(
+                sort_column,
+                desc=(sort_by in {"price_desc", "year_desc", "horsepower_desc"}),
+            )
+        else:
+            # "featured" maps to is_featured desc with a stable secondary sort.
+            query = query.order("is_featured", desc=True).order("created_at", desc=True)
+
+        # Pagination via Range header (PostgREST). Must also be applied
+        # BEFORE any filter.
+        start = (page - 1) * limit
+        end = start + limit - 1
+        query = query.range(start, end)
+
+        # ---- Filters (after order/range; the builder is now a
+        # SyncFilterRequestBuilder and order/range/limit would not work here) ----
         if getattr(filters, "body_type", None):
             query = query.eq("body_type", filters.body_type)
         if getattr(filters, "fuel_type", None):
@@ -113,27 +140,12 @@ class CarService:
             query = query.in_("id", hp_ids)
 
         # Search uses the GIN-indexed tsvector. PostgREST exposes it via the
-        # `search_text` column with `@@` / `websearch_to_tsquery`. The
-        # supabase-py SDK does not expose a generic FTS operator directly, so
-        # we use a parameterized RPC-free path: filter via `textsearch`.
-        # Falls back to plain ILIKE on model if the column is missing.
+        # `search_text` column with `@@` / `websearch_to_tsquery`.
         search_term = getattr(filters, "search", None)
         if search_term:
-            query = query.text_search("search_text", str(search_term), options={"type": "websearch"})
-
-        # Sorting. The allowlist prevents arbitrary column names.
-        sort_column = SORT_COLUMN_MAP.get(str(sort_by), "is_featured")
-        if sort_column in {"price_usd", "year", "is_featured", "model"}:
-            query = query.order(sort_column, desc=(sort_by in {"price_desc", "year_desc", "horsepower_desc"}))
-        else:
-            # "featured" maps to is_featured desc, but we also need a stable
-            # secondary sort. Use created_at desc to be deterministic.
-            query = query.order("is_featured", desc=True).order("created_at", desc=True)
-
-        # Pagination via Range header (PostgREST).
-        start = (page - 1) * limit
-        end = start + limit - 1
-        query = query.range(start, end)
+            query = query.text_search(
+                "search_text", str(search_term), options={"type": "websearch"}
+            )
 
         try:
             resp = query.execute()
@@ -164,7 +176,15 @@ class CarService:
             return None
 
         try:
-            resp = client.table(VEHICLE_TABLE).select("*").eq("id", car_id).limit(1).execute()
+            # ``.limit()`` must be applied to the select builder BEFORE any
+            # filter (see class docstring in ``get_cars``).
+            resp = (
+                client.table(VEHICLE_TABLE)
+                .select("*")
+                .limit(1)
+                .eq("id", car_id)
+                .execute()
+            )
         except Exception as e:
             print(f"[CarService] Supabase error in get_car_by_id: {e}")
             return None
@@ -183,12 +203,14 @@ class CarService:
             return []
 
         try:
+            # ``.order()`` and ``.limit()`` must be applied to the select
+            # builder BEFORE the filter, in postgrest-py 2.x.
             resp = (
                 client.table(VEHICLE_TABLE)
                 .select("*")
-                .eq("is_featured", True)
                 .order("created_at", desc=True)
                 .limit(limit)
+                .eq("is_featured", True)
                 .execute()
             )
         except Exception as e:
@@ -237,7 +259,9 @@ class CarService:
     @staticmethod
     def _resolve_brand_id_by_name(client: Any, name: str) -> Optional[int]:
         try:
-            resp = client.table(BRANDS_TABLE).select("id").ilike("name", name).limit(1).execute()
+            # ``.limit()`` must be applied to the select builder BEFORE the
+            # filter in postgrest-py 2.x.
+            resp = client.table(BRANDS_TABLE).select("id").limit(1).ilike("name", name).execute()
         except Exception as e:
             print(f"[CarService] Supabase error resolving brand: {e}")
             return None
