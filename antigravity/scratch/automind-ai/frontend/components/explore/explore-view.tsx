@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { SlidersHorizontal, X, RotateCcw, GitCompare, ArrowRight, Sparkles, Layers } from "lucide-react";
+import { SlidersHorizontal, X, RotateCcw, GitCompare, ArrowRight, Sparkles, Layers, AlertTriangle } from "lucide-react";
 import { Vehicle, VehicleFilterOptions, VehicleSortOption } from "@/types/vehicle";
 import { VehicleService } from "@/lib/services/vehicle-service";
 import { Container } from "@/components/ui/container";
@@ -40,6 +40,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   const [comparingIds, setComparingIds] = useState<string[]>([]);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>(initialVehicles);
 
   // Active filter count calculator
@@ -59,6 +60,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   useEffect(() => {
     let isCancelled = false;
     setIsLoading(true);
+    setLoadError(null);
 
     const executeQuery = async () => {
       // 1. Apply multi-criteria filters via service
@@ -67,14 +69,34 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
         searchQuery: searchQuery || undefined,
       };
 
-      const results = await VehicleService.filterCars(combinedFilters);
+      try {
+        const results = await VehicleService.filterCars(combinedFilters);
 
-      // 2. Apply deterministic sorting
-      const sorted = VehicleService.sortCars(results, sortBy);
+        // 2. Apply deterministic sorting (in-memory; works for both
+        // repositories because the HTTP backend already returns the
+        // requested order via `sort_by`).
+        const sorted = VehicleService.sortCars(results, sortBy);
 
-      if (!isCancelled) {
-        setFilteredVehicles(sorted);
-        setIsLoading(false);
+        if (!isCancelled) {
+          setFilteredVehicles(sorted);
+          setLoadError(null);
+        }
+      } catch (err) {
+        // Phase 3.3: surface backend failures via the existing
+        // EmptyState so the user sees a meaningful message instead of an
+        // indefinite skeleton loader.
+        if (!isCancelled) {
+          const message =
+            err instanceof Error ? err.message : "Unknown error loading vehicles";
+          setLoadError(message);
+          setFilteredVehicles([]);
+        }
+        // eslint-disable-next-line no-console
+        console.error("[ExploreView] filter/sort failed:", err);
+      } finally {
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
       }
     };
 
@@ -316,6 +338,26 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                   <CarCardSkeleton key={i} />
                 ))}
               </div>
+            ) : loadError ? (
+              /* Error State (Phase 3.3): reuse EmptyState for backend errors */
+              <EmptyState
+                icon={<AlertTriangle className="h-7 w-7 text-amber-400" />}
+                title="CATALOG UNAVAILABLE"
+                description={`The vehicle catalog could not be loaded from the backend. ${loadError}`}
+                actionSlot={
+                  <Button
+                    variant="primary"
+                    size="md"
+                    onClick={() => {
+                      setLoadError(null);
+                      setSearchQuery((q) => q);
+                    }}
+                    leftIcon={<RotateCcw className="h-4 w-4" />}
+                  >
+                    Retry
+                  </Button>
+                }
+              />
             ) : filteredVehicles.length > 0 ? (
               /* Vehicle Cards Grid */
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

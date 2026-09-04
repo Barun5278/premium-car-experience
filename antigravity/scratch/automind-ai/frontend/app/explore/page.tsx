@@ -3,6 +3,11 @@ import { Metadata } from "next";
 import { VehicleService } from "@/lib/services/vehicle-service";
 import { ExploreView } from "@/components/explore";
 
+// Phase 3.3: revalidate every 60s so the page reads the live HTTP
+// repository on subsequent requests rather than serving a one-time
+// pre-rendered snapshot.
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Explore Cars | AutoMind AI",
   description:

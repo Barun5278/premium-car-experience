@@ -462,7 +462,29 @@ export class HttpVehicleRepository implements IVehicleRepository {
 }
 
 // Global Repository Singleton Instance
-export const vehicleRepository = new InMemoryVehicleRepository();
+//
+// Selection strategy (Phase 3.3):
+//   - During `next build` (NEXT_PHASE === "phase-production-build"): the
+//     InMemory fallback is used so the build never fails because the
+//     backend is unreachable. The fallback data comes from
+//     `frontend/data/vehicles.ts`, which is preserved for exactly this
+//     reason.
+//   - At runtime (`next start` / `next dev`): the HttpVehicleRepository
+//     is used so every page request goes to the real FastAPI / Supabase
+//     catalog.
+//
+// This split satisfies the requirement that the Explore page receives
+// real backend vehicles at runtime, while keeping the build hermetic
+// (no backend dependency). The InMemory class is preserved for this
+// purpose and is still referenced by `createDefaultRepository`.
+function createDefaultRepository(): IVehicleRepository {
+  if (process.env.NEXT_PHASE === "phase-production-build") {
+    return new InMemoryVehicleRepository();
+  }
+  return new HttpVehicleRepository();
+}
+
+export const vehicleRepository: IVehicleRepository = createDefaultRepository();
 
 /**
  * Vehicle Service Layer

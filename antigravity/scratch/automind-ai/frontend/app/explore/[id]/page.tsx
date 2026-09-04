@@ -4,6 +4,14 @@ import { notFound } from "next/navigation";
 import { VehicleService } from "@/lib/services/vehicle-service";
 import { VehicleDetailView } from "@/components/explore";
 
+// Phase 3.3: revalidate every 60s so the detail page reads the live HTTP
+// repository on subsequent requests. Combined with the build-time
+// InMemory fallback in `vehicle-service.ts`, this means:
+//   - `next build` succeeds without a live backend.
+//   - At runtime, every request after the 60s window reflects the latest
+//     Supabase catalog.
+export const revalidate = 60;
+
 interface PageProps {
   params: {
     id: string;
