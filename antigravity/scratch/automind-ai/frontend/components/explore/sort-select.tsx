@@ -15,7 +15,6 @@ export const SORT_OPTIONS: { label: string; value: VehicleSortOption }[] = [
   { label: "Price: High to Low", value: "price_desc" },
   { label: "Newest", value: "year_desc" },
   { label: "Highest Horsepower", value: "horsepower_desc" },
-  { label: "Best Mileage / Efficiency", value: "mileage_asc" },
   { label: "Name: A to Z", value: "name_asc" },
 ];
 

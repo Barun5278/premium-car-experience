@@ -5,6 +5,14 @@ import {
   VehicleComparisonResult,
 } from "@/types/vehicle";
 import { SEED_VEHICLES } from "@/data/vehicles";
+import {
+  BackendCar,
+  BackendPaginatedCars,
+  BackendCompareResponse,
+  toVehicle,
+  toVehicleList,
+  toComparisonResult,
+} from "@/lib/api/adapter";
 
 /**
  * Abstract Vehicle Repository Interface
@@ -260,6 +268,196 @@ export class InMemoryVehicleRepository implements IVehicleRepository {
       vehicles,
       specDifferences,
     };
+  }
+}
+
+/**
+ * HTTP-backed Vehicle Repository
+ * Talks to the FastAPI backend (see `supabase/migrations/0001_phase1_catalog.sql`).
+ *
+ * Defaults to NEXT_PUBLIC_API_URL (or http://127.0.0.1:8000/api/v1 as a
+ * developer-friendly default). The user can override the URL at runtime by
+ * passing a different `baseUrl` to the constructor.
+ *
+ * This class is NOT yet the default repository — the in-memory repository
+ * remains the default singleton for now (see `vehicleRepository` at the
+ * bottom of this file). To switch the app over, replace the singleton
+ * export with `new HttpVehicleRepository()`.
+ */
+export class HttpVehicleRepository implements IVehicleRepository {
+  private readonly baseUrl: string;
+  /**
+   * Used by facet methods to fetch the full catalog in one call.
+   * Cap to keep request URL reasonable.
+   */
+  private static readonly FACET_FETCH_LIMIT = 100;
+
+  constructor(baseUrl?: string) {
+    this.baseUrl =
+      (typeof baseUrl === "string" && baseUrl.length > 0
+        ? baseUrl
+        : undefined) ??
+      process.env.NEXT_PUBLIC_API_URL ??
+      "http://127.0.0.1:8000/api/v1";
+  }
+
+  // ----- HTTP plumbing -----------------------------------------------
+  private async request<T>(path: string, init: RequestInit = {}): Promise<T> {
+    const url = `${this.baseUrl.replace(/\/+$/, "")}${path}`;
+    const response = await fetch(url, {
+      ...init,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        ...(init.headers ?? {}),
+      },
+    });
+    if (!response.ok) {
+      const body = await response.text().catch(() => "");
+      throw new Error(
+        `VehicleRepository HTTP [${response.status}] ${path}: ${body || response.statusText}`,
+      );
+    }
+    return (await response.json()) as T;
+  }
+
+  private buildQuery(params: Record<string, string | number | boolean | undefined | null>): string {
+    const sp = new URLSearchParams();
+    for (const [key, value] of Object.entries(params)) {
+      if (value === undefined || value === null || value === "") continue;
+      sp.append(key, String(value));
+    }
+    const s = sp.toString();
+    return s ? `?${s}` : "";
+  }
+
+  /**
+   * Fetch the full catalog as plain vehicles. Used by the facet methods
+   * which need the entire list to compute distinct values.
+   */
+  private async fetchAllVehicles(): Promise<Vehicle[]> {
+    const data = await this.request<BackendPaginatedCars>(
+      `/cars${this.buildQuery({
+        sort_by: "featured",
+        page: 1,
+        limit: HttpVehicleRepository.FACET_FETCH_LIMIT,
+      })}`,
+    );
+    return toVehicleList(data);
+  }
+
+  // ----- IVehicleRepository implementation ----------------------------
+  async getAll(): Promise<Vehicle[]> {
+    const data = await this.request<BackendPaginatedCars>(
+      `/cars${this.buildQuery({
+        sort_by: "featured",
+        page: 1,
+        limit: HttpVehicleRepository.FACET_FETCH_LIMIT,
+      })}`,
+    );
+    return toVehicleList(data);
+  }
+
+  async getById(id: string): Promise<Vehicle | null> {
+    try {
+      const car = await this.request<BackendCar>(`/cars/${encodeURIComponent(id)}`);
+      return toVehicle(car);
+    } catch (err) {
+      // 404 is the expected "not found" outcome; surface as null.
+      if (err instanceof Error && /\[404\]/.test(err.message)) return null;
+      throw err;
+    }
+  }
+
+  async search(query: string): Promise<Vehicle[]> {
+    const q = (query ?? "").trim();
+    if (!q) return this.getAll();
+    const data = await this.request<BackendPaginatedCars>(
+      `/cars${this.buildQuery({ search: q, page: 1, limit: HttpVehicleRepository.FACET_FETCH_LIMIT })}`,
+    );
+    return toVehicleList(data);
+  }
+
+  async filter(options: VehicleFilterOptions): Promise<Vehicle[]> {
+    // Translate frontend filter options to backend query params.
+    const body_type = Array.isArray(options.bodyType)
+      ? options.bodyType[0] // backend doesn't support multi-value body_type in v1
+      : options.bodyType;
+    const fuel_type = Array.isArray(options.fuelType)
+      ? options.fuelType[0]
+      : options.fuelType;
+
+    const data = await this.request<BackendPaginatedCars>(
+      `/cars${this.buildQuery({
+        make: options.brand,
+        body_type,
+        fuel_type,
+        min_price: options.minPrice,
+        max_price: options.maxPrice,
+        min_year: options.minYear,
+        max_year: options.maxYear,
+        min_horsepower: options.minHorsepower,
+        search: options.searchQuery,
+        page: 1,
+        limit: HttpVehicleRepository.FACET_FETCH_LIMIT,
+      })}`,
+    );
+    return toVehicleList(data);
+  }
+
+  async getFeatured(): Promise<Vehicle[]> {
+    const cars = await this.request<BackendCar[]>(`/cars/featured`);
+    return Array.isArray(cars) ? cars.map(toVehicle) : [];
+  }
+
+  async getDistinctBrands(): Promise<string[]> {
+    const all = await this.fetchAllVehicles();
+    return Array.from(new Set(all.map((v) => v.brand))).sort();
+  }
+
+  async getDistinctBodyTypes(): Promise<string[]> {
+    const all = await this.fetchAllVehicles();
+    return Array.from(new Set(all.map((v) => v.bodyType))).sort();
+  }
+
+  async getDistinctFuelTypes(): Promise<string[]> {
+    const all = await this.fetchAllVehicles();
+    return Array.from(new Set(all.map((v) => v.fuelType))).sort();
+  }
+
+  async getPriceRange(): Promise<{ min: number; max: number }> {
+    const all = await this.fetchAllVehicles();
+    if (all.length === 0) return { min: 0, max: 0 };
+    let min = all[0].price;
+    let max = all[0].price;
+    for (const v of all) {
+      if (v.price < min) min = v.price;
+      if (v.price > max) max = v.price;
+    }
+    return { min, max };
+  }
+
+  async getHorsepowerRange(): Promise<{ min: number; max: number }> {
+    const all = await this.fetchAllVehicles();
+    if (all.length === 0) return { min: 0, max: 0 };
+    let min = all[0].horsepower;
+    let max = all[0].horsepower;
+    for (const v of all) {
+      if (v.horsepower < min) min = v.horsepower;
+      if (v.horsepower > max) max = v.horsepower;
+    }
+    return { min, max };
+  }
+
+  async compare(ids: string[]): Promise<VehicleComparisonResult> {
+    const valid = (ids ?? []).filter((x) => typeof x === "string" && x.length > 0);
+    if (valid.length < 2) {
+      return { vehicles: [], specDifferences: [] };
+    }
+    const data = await this.request<BackendCompareResponse>(
+      `/cars/compare${this.buildQuery({ ids: valid.join(",") })}`,
+    );
+    return toComparisonResult(data);
   }
 }
 

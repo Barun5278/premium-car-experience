@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import Link from "next/navigation"; // Note: next/link in Next.js
 import { usePathname } from "next/navigation";
 import NextLink from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
